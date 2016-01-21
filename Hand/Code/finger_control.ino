@@ -3,7 +3,7 @@
 Servo abductor;
 int phasePin = 6;
 int enablePin = 7;
-int dCycle = map(40, 0, 100, 0, 255);
+int dCycle = map(60, 0, 100, 0, 255);
 int abAngle = map(10, 0, 90, 20, 110);
 char control;
 int i;
@@ -23,11 +23,25 @@ void loop() {
         flag = 0;
     }
     if(flag == 0) {
-        if(control=='o') {
-            openFinger();
-        }
-        else if(control=='c') {
-            closeFinger();
+        switch(control) {
+            case 'o':
+                openFinger();
+                break;
+            case 'c':
+                closeFinger();
+                break;
+            case '1':
+                abAngle = map(10, 0, 90, 20, 110);
+                abductor.write(abAngle);
+                break;
+            case '2':
+                abAngle = map(45, 0, 90, 20, 110);
+                abductor.write(abAngle);
+                break;
+            case '3':
+                abAngle = map(90, 0, 90, 20, 110);
+                abductor.write(abAngle);
+                break;
         }
     }
     else {
@@ -37,7 +51,7 @@ void loop() {
 
 void closeFinger() {
     digitalWrite(enablePin, HIGH);
-    for(i=0;i<14;i++) {
+    for(i=0;i<10;i++) {
         analogWrite(phasePin, dCycle);
         delay(100);
     }
@@ -46,7 +60,7 @@ void closeFinger() {
 
 void openFinger() {
     digitalWrite(enablePin, LOW);
-    for(i=6;i>0;i--) {
+    for(i=4;i>0;i--) {
         analogWrite(phasePin, dCycle);
         delay(100);
     }
