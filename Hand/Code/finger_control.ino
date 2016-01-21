@@ -1,6 +1,10 @@
+#include <Servo.h>
+
+Servo abductor;
 int phasePin = 6;
 int enablePin = 7;
 int dCycle = map(40, 0, 100, 0, 255);
+int abAngle = map(10, 0, 90, 20, 110);
 char control;
 int i;
 int flag;
@@ -8,6 +12,8 @@ int flag;
 void setup() {
     pinMode(phasePin, OUTPUT);
     pinMode(enablePin, OUTPUT);
+    abductor.attach(3);
+    abductor.write(abAngle);
     Serial.begin(115200);
 }
 
