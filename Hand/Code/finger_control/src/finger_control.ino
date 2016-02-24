@@ -3,36 +3,34 @@
 
 SeCo dataLink;
 
-#define encoderPinA  2
-#define encoderPinB  3
+typedef struct {
+    int encoderPinA, encoderPinB, phase, enable;
+    volatile double encoderCount = 0, angularPos = 0, position = 0;
+    float error = 0, control = 0, lastError = 0, lastPosition = 0, setPoint = 0;
+} finger;
+
+finger index;
 
 #define Kp 1000
 #define Kd 0
 #define sampleT 1
-
 #define winderRadius 4.5
-
-int phase = 4;
-int enable = 5;
-int dCycle = map(20, 0, 100, 0, 255);
-int flag;
-
-double angularRes = 2*3.14159/6000; //2*pi/number of encoder tics per motor revolution
-volatile double encoderCount = 0, angularPos = 0, position = 0;
-double error = 0, control = 0;
-double lastError = 0, lastPosition = 0;
-float setPoint = 0;
+#define angularRes 2*3.14159/6000 //2*pi/number of encoder tics per motor revolution
 
 void setup() {
-    pinMode(encoderPinA, INPUT);
-    pinMode(encoderPinB, INPUT);
+    index.encoderPinA = 2;
+    index.encoderPinB = 3;
+    index.phase = 4;
+    index.enable = 5;
 
-    pinMode(phase, OUTPUT);
-    pinMode(enable, OUTPUT);
+    pinMode(index.encoderPinA, INPUT);
+    pinMode(index.encoderPinB, INPUT);
+    pinMode(index.phase, OUTPUT);
+    pinMode(index.enable, OUTPUT);
+
     pinMode(13, OUTPUT);
-    flag = 0;
 
-    attachInterrupt(digitalPinToInterrupt(encoderPinA), readEncoder, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(index.encoderPinA), readEncoder, CHANGE);
 
     FlexiTimer2::set(sampleT,control_loop);
     FlexiTimer2::start();
@@ -41,44 +39,44 @@ void setup() {
 }
 
 void readEncoder() {
-    if (digitalRead(encoderPinA) == HIGH) {
-        if (digitalRead(encoderPinB) == LOW) {
-            encoderCount = encoderCount + 1;
+    if (digitalRead(index.encoderPinA) == HIGH) {
+        if (digitalRead(index.encoderPinB) == LOW) {
+            index.encoderCount = index.encoderCount + 1;
         }
         else {
-            encoderCount = encoderCount - 1;
+            index.encoderCount = index.encoderCount - 1;
         }
     }
 
     else {
-        if (digitalRead(encoderPinB) == HIGH) {
-            encoderCount = encoderCount + 1;
+        if (digitalRead(index.encoderPinB) == HIGH) {
+            index.encoderCount = index.encoderCount + 1;
         }
         else {
-            encoderCount = encoderCount - 1;
+            index.encoderCount = index.encoderCount - 1;
         }
     }
-    angularPos = angularRes*encoderCount;
-    position = angularPos*winderRadius;
+    index.angularPos = angularRes*index.encoderCount;
+    index.position = index.angularPos*winderRadius;
 }
 
 void control_loop() {
-    error = setPoint-position;
-    control = Kp*error + Kd*(error-lastError);
-    if (control >= 0) {
-        control = constrain(control,0,255);
-        digitalWrite(phase, HIGH);
-        analogWrite(enable, control);
+    index.error = index.setPoint - index.position;
+    index.control = Kp*index.error + Kd*(index.error-index.lastError);
+    if (index.control >= 0) {
+        index.control = constrain(index.control,0,255);
+        digitalWrite(index.phase, HIGH);
+        analogWrite(index.enable, index.control);
     }
     else {
-        control = constrain(abs(control),0,255);
-        digitalWrite(phase, LOW);
-        analogWrite(enable, control);
+        index.control = constrain(abs(index.control),0,255);
+        digitalWrite(index.phase, LOW);
+        analogWrite(index.enable, index.control);
     }
-    lastError = error;
-    lastPosition = position;
+    index.lastError = index.error;
+    index.lastPosition = index.position;
 }
 
 void loop(){
-    setPoint = dataLink.receive();
+    index.setPoint = dataLink.receive();
 }
