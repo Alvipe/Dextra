@@ -22,7 +22,7 @@ def send_setpoint(setpoint):
     footer = chr(0xBB)
     check = 0x00
     data = struct.pack('f',float(setpoint))
-    
+
     for i in range(len(data)):
         check = check^ord(data[i])
     check = chr(check)
@@ -30,7 +30,9 @@ def send_setpoint(setpoint):
     ser.write(message)
 
 while(1):
+    fingerName = raw_input('Which finger do you want to move?\n(thumb = t, index = i, middle = m, ring = r, pinky = p): ')
+    ser.write(fingerName);
     setpoint = float(raw_input('Enter setpoint: '))
-    if(setpoint > 23):
-        setpoint = 23
+    if(setpoint > 22):
+        setpoint = 22
     send_setpoint(setpoint)
