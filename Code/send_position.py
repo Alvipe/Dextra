@@ -9,7 +9,24 @@ import time
 import serial
 import struct
 
-ser = serial.Serial('/dev/ttyUSB0',115200,timeout=None)
+portname_start = '/dev/ttyUSB'
+
+# Try opening serial ports /dev/ttyUSB0->9
+for i in range (0, 10):
+    # Change i to a string
+    portnum = str(i)
+    # Append "i" to the end of portname_start
+    portname_full=''.join([portname_start,portnum])
+    # Try to open the serial port with i, if this fails try again with i+1
+    try:
+        ser = serial.Serial(portname_full, 115200, timeout =1)
+        break
+    except:
+        # If we reach i==9 and no port has been opened, exit and print error message
+        if (i==9):
+            print "No Serial Port Found"
+            sys.exit(0)
+
 #ser.setDTR(False)
 #time.sleep(1)
 #ser.flushInput()
