@@ -11,9 +11,3 @@ For STM32F411 Nucleo (mbed board):
 ~/Dextra$ cd Firmware/STM32F411Nucleo
 ~/Dextra/Firmware/STM32F411Nucleo$ platformio run --target upload
 ```
-
-To send position commands to each finger individually, connect the board to a USB port of your computer and use the send_position.py script:
-
-```bash
-~/Dextra$ cd Firmware
-~/Dextra/Firmware$ python send_position.py
