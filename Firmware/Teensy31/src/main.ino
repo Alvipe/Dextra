@@ -1,5 +1,6 @@
+#include <Arduino.h>
 #include <Servo.h>
-#include <FlexiTimer2.h>
+#include <MsTimer2.h>
 #include <SeCo.h>
 
 Servo abductor;
@@ -165,8 +166,8 @@ void setup() {
     pinky.attach(2,3,23,22,'p');
     abductor.attach(12);
     abductor.write(abAngle);
-    FlexiTimer2::set(pidTime, hand_control);
-    FlexiTimer2::start();
+    MsTimer2::set(pidTime, hand_control);
+    MsTimer2::start();
     Serial.begin(115200);
 }
 

@@ -1,14 +1,23 @@
 /*
-  FlexiTimer2.h - Using timer2 with a configurable resolution
-  Wim Leers <work@wimleers.com>
-
-  Based on MsTimer2
+  MsTimer2.h - Using timer2 with 1ms resolution
   Javier Valencia <javiervalencia80@gmail.com>
 
+  https://github.com/PaulStoffregen/MsTimer2
+  
   History:
-    16/Dec/2011 - Added Teensy/Teensy++ support (bperrybap)
-		   note: teensy uses timer4 instead of timer2
-    25/April/10 - Based on MsTimer2 V0.5 (from 29/May/09)
+	6/Jun/14  - V0.7 added support for Teensy 3.0 & 3.1
+  	29/Dec/11 - V0.6 added support for ATmega32u4, AT90USB646, AT90USB1286 (paul@pjrc.com)
+		some improvements added by Bill Perry
+		note: uses timer4 on Atmega32u4
+  	29/May/09 - V0.5 added support for Atmega1280 (thanks to Manuel Negri)
+  	19/Mar/09 - V0.4 added support for ATmega328P (thanks to Jerome Despatis)
+  	11/Jun/08 - V0.3 
+  		changes to allow working with different CPU frequencies
+  		added support for ATMega128 (using timer2)
+  		compatible with ATMega48/88/168/8
+	10/May/08 - V0.2 added some security tests and volatile keywords
+	9/May/08 - V0.1 released working on ATMEGA168 only
+	
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -25,35 +34,28 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <FlexiTimer2.h>
+#include <MsTimer2.h>
 
-unsigned long FlexiTimer2::time_units;
-void (*FlexiTimer2::func)();
-volatile unsigned long FlexiTimer2::count;
-volatile char FlexiTimer2::overflowing;
-volatile unsigned int FlexiTimer2::tcnt2;
+unsigned long MsTimer2::msecs;
+void (*MsTimer2::func)();
+volatile unsigned long MsTimer2::count;
+volatile char MsTimer2::overflowing;
+volatile unsigned int MsTimer2::tcnt2;
+#if defined(__arm__) && defined(TEENSYDUINO)
+static IntervalTimer itimer;
+#endif
 
-void FlexiTimer2::set(unsigned long ms, void (*f)()) {
-    FlexiTimer2::set(ms, 0.001, f);
-}
-
-
-/**
- * @param resolution
- *   0.001 implies a 1 ms (1/1000s = 0.001s = 1ms) resolution. Therefore,
- *   0.0005 implies a 0.5 ms (1/2000s) resolution. And so on.
- */
-void FlexiTimer2::set(unsigned long units, double resolution, void (*f)()) {
+void MsTimer2::set(unsigned long ms, void (*f)()) {
 	float prescaler = 0.0;
 	
-	if (units == 0)
-		time_units = 1;
+	if (ms == 0)
+		msecs = 1;
 	else
-		time_units = units;
+		msecs = ms;
 		
 	func = f;
-	
-#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega1280__) || defined (__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
+
+#if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
 	TIMSK2 &= ~(1<<TOIE2);
 	TCCR2A &= ~((1<<WGM21) | (1<<WGM20));
 	TCCR2B &= ~(1<<WGM22);
@@ -138,17 +140,19 @@ void FlexiTimer2::set(unsigned long units, double resolution, void (*f)()) {
 		TCCR4B = (1<<CS41) | (1<<PSR4);
 		prescaler = 2.0;
 	}
-	tcnt2 = (int)((float)F_CPU * resolution / prescaler) - 1;
+	tcnt2 = (int)((float)F_CPU * 0.001 / prescaler) - 1;
 	OCR4C = tcnt2;
 	return;
+#elif defined(__arm__) && defined(TEENSYDUINO)
+	// nothing needed here
 #else
 #error Unsupported CPU type
 #endif
-	
-	tcnt2 = 256 - (int)((float)F_CPU * resolution / prescaler);
+
+	tcnt2 = 256 - (int)((float)F_CPU * 0.001 / prescaler);
 }
 
-void FlexiTimer2::start() {
+void MsTimer2::start() {
 	count = 0;
 	overflowing = 0;
 #if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
@@ -164,10 +168,12 @@ void FlexiTimer2::start() {
 	TIFR4 = (1<<TOV4);
 	TCNT4 = 0;
 	TIMSK4 = (1<<TOIE4);
+#elif defined(__arm__) && defined(TEENSYDUINO)
+	itimer.begin(MsTimer2::_overflow, 1000);
 #endif
 }
 
-void FlexiTimer2::stop() {
+void MsTimer2::stop() {
 #if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
 	TIMSK2 &= ~(1<<TOIE2);
 #elif defined (__AVR_ATmega128__)
@@ -176,34 +182,39 @@ void FlexiTimer2::stop() {
 	TIMSK &= ~(1<<TOIE2);
 #elif defined (__AVR_ATmega32U4__)
 	TIMSK4 = 0;
+#elif defined(__arm__) && defined(TEENSYDUINO)
+	itimer.end();
 #endif
 }
 
-void FlexiTimer2::_overflow() {
+void MsTimer2::_overflow() {
 	count += 1;
 	
-	if (count >= time_units && !overflowing) {
+	if (count >= msecs && !overflowing) {
 		overflowing = 1;
-		count = count - time_units; // subtract time_uints to catch missed overflows
+		count = count - msecs; // subtract ms to catch missed overflows
 					// set to 0 if you don't want this.
 		(*func)();
 		overflowing = 0;
 	}
 }
+
+#if defined (__AVR__)
 #if defined (__AVR_ATmega32U4__)
 ISR(TIMER4_OVF_vect) {
 #else
 ISR(TIMER2_OVF_vect) {
 #endif
 #if defined (__AVR_ATmega168__) || defined (__AVR_ATmega48__) || defined (__AVR_ATmega88__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega1280__) || defined(__AVR_ATmega2560__) || defined(__AVR_AT90USB646__) || defined(__AVR_AT90USB1286__)
-	TCNT2 = FlexiTimer2::tcnt2;
+	TCNT2 = MsTimer2::tcnt2;
 #elif defined (__AVR_ATmega128__)
-	TCNT2 = FlexiTimer2::tcnt2;
+	TCNT2 = MsTimer2::tcnt2;
 #elif defined (__AVR_ATmega8__)
-	TCNT2 = FlexiTimer2::tcnt2;
+	TCNT2 = MsTimer2::tcnt2;
 #elif defined (__AVR_ATmega32U4__)
 	// not necessary on 32u4's high speed timer4
 #endif
-	FlexiTimer2::_overflow();
+	MsTimer2::_overflow();
 }
+#endif // AVR
 
