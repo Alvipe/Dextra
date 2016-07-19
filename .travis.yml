@@ -36,12 +36,15 @@ cache:
 install:
     - pip install -U platformio
 
-env:
-    - TEST_DIR = Firmware/Teensy31
-    - TEST_DIR = Firmware/STM32F411Nucleo
+# env:
+#     - TEST_DIR = Firmware/Teensy31
+#     - TEST_DIR = Firmware/STM32F411Nucleo
 
 script:
-    - cd TEST_DIR && platformio run
+    - cd Firmware/Teensy31
+    - platformio run
+    - cd ../STM32F411Nucleo
+    - platformio run
 
 
 #
