@@ -41,7 +41,7 @@ env:
     - TEST_DIR = Firmware/STM32F411Nucleo
 
 script:
-    - cd $TEST_DIR && platformio run
+    - cd TEST_DIR && platformio run
 
 
 #
