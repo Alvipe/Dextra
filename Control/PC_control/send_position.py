@@ -5,11 +5,17 @@ Created on Wed Feb 17 17:09:53 2016
 @author: alvaro
 """
 
+import sys
 import time
 import serial
 import struct
 
-portname_start = '/dev/ttyUSB'
+deviceName = raw_input('Which microcontroller are you using, (A)rduino or (T)eensy?: ')
+
+if deviceName == 'A':
+    portname_start = '/dev/ttyUSB'
+elif deviceName == 'T':
+    portname_start = '/dev/ttyACM'
 
 # Try opening serial ports /dev/ttyUSB0->9
 for i in range (0, 10):
