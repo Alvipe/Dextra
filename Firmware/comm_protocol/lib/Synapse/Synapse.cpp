@@ -1,3 +1,6 @@
+#include "Arduino.h"
+#include "Synapse.h"
+
 static const uint8_t header = 0xAA;
 static const uint8_t footer = 0xBB;
 static const uint8_t finger_address[6] = {0x01,0x02,0x03,0x04,0x05,0x06};
@@ -11,7 +14,7 @@ typedef union {
 
 uint8_t check = 0x00;
 
-bool waitHeader() {
+bool Synapse::waitHeader() {
     uint8_t rec;
     while(Serial.available()>0) {
         rec = Serial.read();
@@ -21,6 +24,7 @@ bool waitHeader() {
         }
         else return false;
     }
+    return false;
 }
 
 // bool checkMsg(uint8_t *buff) {
@@ -33,7 +37,7 @@ bool waitHeader() {
 //     else return false;
 // }
 
-uint8_t *getMessage() {
+uint8_t* Synapse::getMessage() {
     static uint8_t message[messageSize];
     uint8_t rec;
     unsigned int i = 0;
@@ -49,20 +53,21 @@ uint8_t *getMessage() {
         }
         else return NULL;
     }
+    return NULL;
 }
 
-float *getSetPoints() {
-    uint8_t *message;
+float* Synapse::getSetPoints() {
+    uint8_t* message;
     binaryFloat data;
     static float setPointArray[6];
-    int i = 0;
+    unsigned int i = 0;
     while(!waitHeader()) {}
     message = getMessage();
     while(i<messageSize) {
-        for(int j=0;j<6;j++) {
+        for(unsigned int j=0;j<6;j++) {
             if(message[i]==finger_address[j]) {
                 i++;
-                for(int k=0;k<dataSize;k++) {
+                for(unsigned int k=0;k<dataSize;k++) {
                     data.binary[k] = message[i];
                     i++;
                 }
@@ -73,7 +78,7 @@ float *getSetPoints() {
     return setPointArray;
 }
 
-// uint8_t *getData() {
+// uint8_t* Synapse::getData() {
 //     static uint8_t inBuff[dataSize];
 //     while(Serial.available()>0) {
 //         for(int i = 0;i<dataSize;i++) {
@@ -84,9 +89,9 @@ float *getSetPoints() {
 //     return inBuff;
 // }
 
-// float *getSetPoints() {
+// float* Synapse::getSetPoints() {
 //     static float setPointArray[6];
-//     uint8_t *inBuff;
+//     uint8_t* inBuff;
 //     uint8_t rec;
 //     binaryFloat data;
 //     while(!waitHeader()) {}
@@ -105,25 +110,3 @@ float *getSetPoints() {
 //         }
 //     }
 // }
-
-void setup() {
-    pinMode(13, OUTPUT);
-    digitalWrite(13, LOW);
-    Serial.begin(115200);
-}
-
-void loop() {
-    float *setPointArray = getSetPoints();
-    if(setPointArray[0]==10.0 && setPointArray[1]==11.1 && setPointArray[2]==12.2 && setPointArray[3]==13.3 && setPointArray[4]==14.4 && setPointArray[5]==15.5) {
-        digitalWrite(13, HIGH);
-    }
-    else {
-        digitalWrite(13, LOW);
-    }
-    // for(int i=0;i<6;i++) {
-    //     Serial.print(setPointArray[i]);
-    //     Serial.print("||");
-    // }
-    // Serial.println();
-
-}

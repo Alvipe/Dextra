@@ -48,17 +48,13 @@ def send_setpoint_list(setPointList):
     for i in range(len(setPointList)):
         data.append(struct.pack('f',float(setPointList[i])))
     message = header
-#    print message
     for j in range(len(setPointList)):
-        message = message + finger_address[j] + data[j]
+        message += finger_address[j] + data[j]
         for k in range(len(data[j])):
             check = check^ord(data[j][k])
-#        print message, check
     check = chr(check)
-    message = message + footer
-#    message = message+check+footer
-#    print message, check
-#    return message
+    message += footer
+#    message += check + footer
     ser.write(message)
     return message
 
