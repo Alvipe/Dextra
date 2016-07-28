@@ -79,7 +79,7 @@ def send_setpoint_list(setPointList):
 def getMessage():
     header = chr(0xAA)
     footer = chr(0xBB)
-    message = []
+    message = ''
     rec = chr(0x00)
     messageSize = 30
     i = 0
@@ -87,21 +87,25 @@ def getMessage():
     while(ser.inWaiting()>0):
         rec = ser.read()
         if(rec!=footer and i<messageSize):
-            message.append(rec)
+            message += rec
             i += 1
         elif(rec==footer):
             return message
 
 def getData():
-    message = []
-    data = 0.0
+    message = ''
     dataList = []
     finger_address = [chr(0x01),chr(0x02),chr(0x03),chr(0x04),chr(0x05),chr(0x06)]
-    # i = 0
+    i = 0
     message = getMessage()
-    for i in range(6):
-        if(message[i]==finger_address[i]):
-            data = round(struct.unpack('f',message[i])[0],4)
+    for j in range(6):
+        if(message[i]==finger_address[j]):
+            data = ''
+            i += 1
+            for k in range(4):
+                data += message[i]
+                i += 1
+            data = round(struct.unpack('f',data)[0],4)
             dataList.append(data)
             print("Oh yeah!")
         else:
