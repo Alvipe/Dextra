@@ -29,7 +29,7 @@ bool Synapse::waitHeader() {
 
 // bool checkMsg(uint8_t *buff) {
 //     uint8_t xorChk = 0x00;
-//     int i;
+//     unsigned int i;
 //     for(i=0;i<4;i++) {
 //         xorChk = xorChk^buff[i];
 //     }
@@ -40,7 +40,8 @@ bool Synapse::waitHeader() {
 uint8_t* Synapse::getMessage() {
     static uint8_t message[messageSize];
     uint8_t rec;
-    unsigned int i = 0;
+    unsigned int i=0;
+    while(!waitHeader()) {}
     while(Serial.available()>0) {
         rec = Serial.read();
         // delayMicroseconds(50);
@@ -60,22 +61,37 @@ float* Synapse::getSetPoints() {
     uint8_t* message;
     binaryFloat data;
     static float setPointArray[6];
-    unsigned int i = 0;
-    while(!waitHeader()) {}
+    unsigned int i=0, j, k;
     message = getMessage();
-    while(i<messageSize) {
-        for(unsigned int j=0;j<6;j++) {
-            if(message[i]==finger_address[j]) {
+    for(j=0;j<6;j++) {
+        if(message[i]==finger_address[j]) {
+            i++;
+            for(k=0;k<dataSize;k++) {
+                data.binary[k] = message[i];
                 i++;
-                for(unsigned int k=0;k<dataSize;k++) {
-                    data.binary[k] = message[i];
-                    i++;
-                }
-                setPointArray[j] = data.floating;
             }
+            setPointArray[j] = data.floating;
         }
     }
     return setPointArray;
+}
+
+void Synapse::write(float* messageToSend) {
+    binaryFloat data;
+    uint8_t message[32];
+    message[0] = header;
+    unsigned int i=1, j, k;
+    for(j=0;j<6;j++) {
+        data.floating = messageToSend[j];
+        message[i] = finger_address[j];
+        i++;
+        for(k=0;k<dataSize;k++) {
+            message[i] = data.binary[k];
+            i++;
+        }
+    }
+    message[31] = footer;
+    Serial.write(message,32);
 }
 
 // uint8_t* Synapse::getData() {

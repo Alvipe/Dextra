@@ -6,6 +6,7 @@
 class Synapse {
     public:
         float *getSetPoints();
+        void write(float* messageToSend);
     private:
         bool waitHeader();
         bool checkMsg(uint8_t *buff);
