@@ -15,11 +15,11 @@ typedef union {
 uint8_t check = 0x00;
 
 bool Synapse::waitHeader() {
-    uint8_t rec;
+    uint8_t inByte;
     while(Serial.available()>0) {
-        rec = Serial.read();
+        inByte = Serial.read();
         // delayMicroseconds(50);
-        if(rec==header) {
+        if(inByte==header) {
             return true;
         }
         else return false;
@@ -39,17 +39,17 @@ bool Synapse::waitHeader() {
 
 uint8_t* Synapse::getMessage() {
     static uint8_t message[messageSize];
-    uint8_t rec;
+    uint8_t inByte;
     unsigned int i=0;
     while(!waitHeader()) {}
     while(Serial.available()>0) {
-        rec = Serial.read();
+        inByte = Serial.read();
         // delayMicroseconds(50);
-        if((rec!=footer)&&(i<messageSize)) {
-            message[i] = rec;
+        if((inByte!=footer)&&(i<messageSize)) {
+            message[i] = inByte;
             i++;
         }
-        else if(rec==footer) {
+        else if(inByte==footer) {
             return message;
         }
         else return NULL;
@@ -108,20 +108,20 @@ void Synapse::write(float* messageToSend) {
 // float* Synapse::getSetPoints() {
 //     static float setPointArray[6];
 //     uint8_t* inBuff;
-//     uint8_t rec;
+//     uint8_t inByte;
 //     binaryFloat data;
 //     while(!waitHeader()) {}
 //     for(int i=0;i<6;i++) {
-//         rec = Serial.read();
+//         inByte = Serial.read();
 //         delayMicroseconds(50);
-//         if(rec == finger_address[i]) {
+//         if(inByte == finger_address[i]) {
 //             inBuff = getData();
 //             for(int j=0;j<dataSize;j++) {
 //                 data.binary[j] = inBuff[j];
 //             }
 //             setPointArray[i] = data.floating;
 //         }
-//         else if(rec == footer) {
+//         else if(inByte == footer) {
 //             return setPointArray;
 //         }
 //     }
