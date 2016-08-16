@@ -1,0 +1,51 @@
+<RootWidget>:
+    orientation: "vertical"
+    # slider_values: 10.0, 0.0, 0.0, 0.0, 0.0, 0.0
+    abductor: abductor_slider
+    thumb: thumb_slider
+    index: index_slider
+    middle: middle_slider
+    ring: ring_slider
+    pinky: pinky_slider
+
+    Slider:
+        id: abductor_slider
+        range: (0, 90)
+        value: root.slider_values[0]
+        step: 1
+        on_value: root.slider_values[0] = self.value; root.updateAbductor()
+    Slider:
+        id: thumb_slider
+        range: (-12, 12)
+        value: root.slider_values[1]
+        step: 0.5
+        on_value: root.slider_values[1] = self.value; root.updateThumb()
+    Slider:
+        id: index_slider
+        range: (0, 25)
+        value: root.slider_values[2]
+        step: 0.5
+        on_value: root.slider_values[2] = self.value; root.updateIndex()
+    Slider:
+        id: middle_slider
+        range: (0, 25)
+        value: root.slider_values[3]
+        step: 0.5
+        on_value: root.slider_values[3] = self.value; root.updateMiddle()
+    Slider:
+        id: ring_slider
+        range: (0, 25)
+        value: root.slider_values[4]
+        step: 0.5
+        on_value: root.slider_values[4] = self.value; root.updateRing()
+    Slider:
+        id: pinky_slider
+        range: (0, 25)
+        value: root.slider_values[5]
+        step: 0.5
+        on_value: root.slider_values[5] = self.value; root.updatePinky()
+
+    Label:
+        id: values_label
+        font_size: 30
+        text: "Positions:"+",".join(["%.3f" %(i) for i in root.slider_values])
