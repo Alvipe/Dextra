@@ -1,5 +1,9 @@
 <RootWidget>:
-    orientation: "vertical"
+    rows: 6
+    cols: 3
+    # row_force_default: True
+    # row_default_height: 75
+    # orientation: "vertical"
     # slider_values: 10.0, 0.0, 0.0, 0.0, 0.0, 0.0
     abductor: abductor_slider
     thumb: thumb_slider
@@ -8,36 +12,139 @@
     ring: ring_slider
     pinky: pinky_slider
 
+    Label:
+        id: abductor_label
+        size_hint_x: None
+        width: 200
+        font_size: 20
+        text: "Abductor angle"
+    TextInput:
+        id: abductor_text
+        size_hint_x: None
+        width: 100
+        # size_hint: None, None
+        # size: 100, 20
+        text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+        text_height: self.line_height
+        padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+        multiline: False
+        text: str(root.slider_values[0])
+        on_text_validate: root.slider_values[0] = float(self.text)
     Slider:
         id: abductor_slider
         range: (0, 90)
         value: root.slider_values[0]
         step: 1
         on_value: root.slider_values[0] = self.value; root.updateAbductor()
+
+    Label:
+        id: thumb_label
+        size_hint_x: None
+        width: 200
+        font_size: 20
+        text: "Thumb position"
+    TextInput:
+        id: thumb_text
+        size_hint_x: None
+        width: 100
+        text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+        text_height: self.line_height
+        padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+        multiline: False
+        text: str(root.slider_values[1])
+        on_text_validate: root.slider_values[1] = float(self.text)
     Slider:
         id: thumb_slider
         range: (-12, 12)
         value: root.slider_values[1]
         step: 0.5
         on_value: root.slider_values[1] = self.value; root.updateThumb()
+
+    Label:
+        id: index_label
+        size_hint_x: None
+        width: 200
+        font_size: 20
+        text: "Index position"
+    TextInput:
+        id: index_text
+        size_hint_x: None
+        width: 100
+        text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+        text_height: self.line_height
+        padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+        multiline: False
+        text: str(root.slider_values[2])
+        on_text_validate: root.slider_values[2] = float(self.text)
     Slider:
         id: index_slider
         range: (0, 25)
         value: root.slider_values[2]
         step: 0.5
         on_value: root.slider_values[2] = self.value; root.updateIndex()
+
+    Label:
+        id: middle_label
+        size_hint_x: None
+        width: 200
+        font_size: 20
+        text: "Middle position"
+    TextInput:
+        id: middle_text
+        size_hint_x: None
+        width: 100
+        text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+        text_height: self.line_height
+        padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+        multiline: False
+        text: str(root.slider_values[3])
+        on_text_validate: root.slider_values[3] = float(self.text)
     Slider:
         id: middle_slider
         range: (0, 25)
         value: root.slider_values[3]
         step: 0.5
         on_value: root.slider_values[3] = self.value; root.updateMiddle()
+
+    Label:
+        id: ring_label
+        size_hint_x: None
+        width: 200
+        font_size: 20
+        text: "Ring position"
+    TextInput:
+        id: ring_text
+        size_hint_x: None
+        width: 100
+        text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+        text_height: self.line_height
+        padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+        multiline: False
+        text: str(root.slider_values[4])
+        on_text_validate: root.slider_values[4] = float(self.text)
     Slider:
         id: ring_slider
         range: (0, 25)
         value: root.slider_values[4]
         step: 0.5
         on_value: root.slider_values[4] = self.value; root.updateRing()
+
+    Label:
+        id: pinky_label
+        size_hint_x: None
+        width: 200
+        font_size: 20
+        text: "Pinky position"
+    TextInput:
+        id: pinky_text
+        size_hint_x: None
+        width: 100
+        text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+        text_height: self.line_height
+        padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+        multiline: False
+        text: str(root.slider_values[5])
+        on_text_validate: root.slider_values[5] = float(self.text)
     Slider:
         id: pinky_slider
         range: (0, 25)
@@ -45,7 +152,7 @@
         step: 0.5
         on_value: root.slider_values[5] = self.value; root.updatePinky()
 
-    Label:
-        id: values_label
-        font_size: 30
-        text: "Positions:"+",".join(["%.3f" %(i) for i in root.slider_values])
+    # Label:
+    #     id: values_label
+    #     font_size: 30
+    #     text: "Positions:"+",".join(["%.3f" %(i) for i in root.slider_values])

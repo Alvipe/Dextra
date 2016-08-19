@@ -1,5 +1,6 @@
 from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.gridlayout import GridLayout
+# from kivy.uix.textinput import TextInput
 from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, ListProperty
 from kivy.clock import Clock
 
@@ -29,10 +30,12 @@ def connect_to_serial():
     time.sleep(1)
     ser.flushInput()
     ser.setDTR(True)
-    time.sleep(5)
+    time.sleep(2)
     return ser
 
-class RootWidget(BoxLayout):
+class RootWidget(GridLayout):
+    # rows = 6
+    # cols = 2
     # abductor = NumericProperty(10)
     # thumb = NumericProperty(0)
     # index = NumericProperty(0)
@@ -40,8 +43,8 @@ class RootWidget(BoxLayout):
     # ring = NumericProperty(0)
     # pinky = NumericProperty(0)
     # slider_values = ReferenceListProperty(abductor, thumb, index, middle, ring, pinky)
-    slider_values = ListProperty([10, 0, 0, 0, 0, 0])
-    setpoint_list = [10, 0, 0, 0, 0, 0]
+    setpoint_list = [10.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    slider_values = ListProperty(setpoint_list)
     abductor = ObjectProperty(None)
     thumb = ObjectProperty(None)
     index = ObjectProperty(None)
