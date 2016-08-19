@@ -1,7 +1,6 @@
 from kivy.app import App
-from kivy.uix.gridlayout import GridLayout
-# from kivy.uix.textinput import TextInput
-from kivy.properties import NumericProperty, ReferenceListProperty, ObjectProperty, ListProperty
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty, ListProperty
 from kivy.clock import Clock
 
 import sys
@@ -33,16 +32,7 @@ def connect_to_serial():
     time.sleep(2)
     return ser
 
-class RootWidget(GridLayout):
-    # rows = 6
-    # cols = 2
-    # abductor = NumericProperty(10)
-    # thumb = NumericProperty(0)
-    # index = NumericProperty(0)
-    # middle = NumericProperty(0)
-    # ring = NumericProperty(0)
-    # pinky = NumericProperty(0)
-    # slider_values = ReferenceListProperty(abductor, thumb, index, middle, ring, pinky)
+class RootWidget(BoxLayout):
     setpoint_list = [10.0, 0.0, 0.0, 0.0, 0.0, 0.0]
     slider_values = ListProperty(setpoint_list)
     abductor = ObjectProperty(None)
@@ -64,10 +54,7 @@ class RootWidget(GridLayout):
         self.setpoint_list[4] = self.ring.value
     def updatePinky(self):
         self.setpoint_list[5] = self.pinky.value
-        # print self.abductor.value
-        # self.slider_values[0] = self.abductor.value
     def send_setpoint_list(self,dt):
-        # setpoint_list = self.slider_values
         message = header
         for i in range(len(self.setpoint_list)):
             data = struct.pack('f',float(self.setpoint_list[i]))
@@ -75,8 +62,6 @@ class RootWidget(GridLayout):
         message += footer
         ser.write(message)
         print self.setpoint_list
-        # print self.slider_values
-        # print self.abductor.value
 
 class DextraControlApp(App):
     def build(self):
