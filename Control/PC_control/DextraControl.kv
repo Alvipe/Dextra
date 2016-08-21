@@ -1,7 +1,9 @@
 #:kivy 1.9.1
 
 <RootWidget>:
-    orientation: "vertical"
+    # orientation: "vertical"
+    do_default_tab: False
+    tab_width: root.width/len(self.tab_list)
 
     abductor: abductor_slider
     thumb: thumb_slider
@@ -10,182 +12,205 @@
     ring: ring_slider
     pinky: pinky_slider
 
-    RelativeLayout:
-        id: row_1
-        Label:
-            id: abductor_label
-            size_hint_x: None
-            width: 200
-            pos: 0, 0
-            font_size: 20
-            text: "Abductor angle"
-        TextInput:
-            id: abductor_text
-            size_hint: None, None
-            size: 100, 40
-            pos: abductor_label.width, (row_1.height-self.height)/2
-            text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
-            text_height: self.line_height
-            padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
-            multiline: False
-            text: str(root.slider_values[0])
-            on_text_validate: root.slider_values[0] = float(self.text)
-        Slider:
-            id: abductor_slider
-            size_hint_x: None
-            width: root.width - abductor_label.width - abductor_text.width - 40
-            pos: abductor_label.width + abductor_text.width + 20, 0
-            range: (0, 90)
-            value: root.slider_values[0]
-            step: 1
-            on_value: root.slider_values[0] = self.value; root.updateAbductor()
-    RelativeLayout:
-        id: row_2
-        Label:
-            id: thumb_label
-            size_hint_x: None
-            width: 200
-            pos: 0, 0
-            font_size: 20
-            text: "Thumb position"
-        TextInput:
-            id: thumb_text
-            size_hint: None, None
-            size: 100, 40
-            pos: thumb_label.width, (row_2.height-self.height)/2
-            text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
-            text_height: self.line_height
-            padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
-            multiline: False
-            text: str(root.slider_values[1])
-            on_text_validate: root.slider_values[1] = float(self.text)
-        Slider:
-            id: thumb_slider
-            size_hint_x: None
-            width: root.width - thumb_label.width - thumb_text.width - 40
-            pos: thumb_label.width + thumb_text.width + 20, 0
-            range: (-12, 12)
-            value: root.slider_values[1]
-            step: 0.5
-            on_value: root.slider_values[1] = self.value; root.updateThumb()
+    TabbedPanelItem:
+        id: tab1
+        text: "Connection"
+        BoxLayout:
+            orientation: "vertical"
+            Label:
+                id: status_label
+                text: root.status
+            BoxLayout:
+                orientation: "horizontal"
+                Button:
+                    id: connect_button
+                    text: "Connect to serial"
+                    on_press: root.connect_press()
+                Button:
+                    id: disconnect_button
+                    text: "Disconnect"
+                    on_press: root.disconnect_press()
+    TabbedPanelItem:
+        id: tab2
+        text: "Control panel"
+        BoxLayout:
+            orientation: "vertical"
+            RelativeLayout:
+                id: row_1
+                Label:
+                    id: abductor_label
+                    size_hint_x: None
+                    width: 200
+                    pos: 0, 0
+                    font_size: 20
+                    text: "Abductor angle"
+                TextInput:
+                    id: abductor_text
+                    size_hint: None, None
+                    size: 100, 40
+                    pos: abductor_label.width, (row_1.height-self.height)/2
+                    text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+                    text_height: self.line_height
+                    padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+                    multiline: False
+                    text: str(root.slider_values[0])
+                    on_text_validate: root.slider_values[0] = float(self.text)
+                Slider:
+                    id: abductor_slider
+                    size_hint_x: None
+                    width: root.width - abductor_label.width - abductor_text.width - 40
+                    pos: abductor_label.width + abductor_text.width + 20, 0
+                    range: (0, 90)
+                    value: root.slider_values[0]
+                    step: 1
+                    on_value: root.slider_values[0] = self.value; root.updateAbductor()
+            RelativeLayout:
+                id: row_2
+                Label:
+                    id: thumb_label
+                    size_hint_x: None
+                    width: 200
+                    pos: 0, 0
+                    font_size: 20
+                    text: "Thumb position"
+                TextInput:
+                    id: thumb_text
+                    size_hint: None, None
+                    size: 100, 40
+                    pos: thumb_label.width, (row_2.height-self.height)/2
+                    text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+                    text_height: self.line_height
+                    padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+                    multiline: False
+                    text: str(root.slider_values[1])
+                    on_text_validate: root.slider_values[1] = float(self.text)
+                Slider:
+                    id: thumb_slider
+                    size_hint_x: None
+                    width: root.width - thumb_label.width - thumb_text.width - 40
+                    pos: thumb_label.width + thumb_text.width + 20, 0
+                    range: (-12, 12)
+                    value: root.slider_values[1]
+                    step: 0.5
+                    on_value: root.slider_values[1] = self.value; root.updateThumb()
 
-    RelativeLayout:
-        id: row_3
-        Label:
-            id: index_label
-            size_hint_x: None
-            width: 200
-            pos: 0, 0
-            font_size: 20
-            text: "Index position"
-        TextInput:
-            id: index_text
-            size_hint: None, None
-            size: 100, 40
-            pos: index_label.width, (row_3.height-self.height)/2
-            text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
-            text_height: self.line_height
-            padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
-            multiline: False
-            text: str(root.slider_values[2])
-            on_text_validate: root.slider_values[2] = float(self.text)
-        Slider:
-            id: index_slider
-            size_hint_x: None
-            width: root.width - index_label.width - index_text.width - 40
-            pos: index_label.width + index_text.width + 20, 0
-            range: (0, 25)
-            value: root.slider_values[2]
-            step: 0.5
-            on_value: root.slider_values[2] = self.value; root.updateIndex()
+            RelativeLayout:
+                id: row_3
+                Label:
+                    id: index_label
+                    size_hint_x: None
+                    width: 200
+                    pos: 0, 0
+                    font_size: 20
+                    text: "Index position"
+                TextInput:
+                    id: index_text
+                    size_hint: None, None
+                    size: 100, 40
+                    pos: index_label.width, (row_3.height-self.height)/2
+                    text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+                    text_height: self.line_height
+                    padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+                    multiline: False
+                    text: str(root.slider_values[2])
+                    on_text_validate: root.slider_values[2] = float(self.text)
+                Slider:
+                    id: index_slider
+                    size_hint_x: None
+                    width: root.width - index_label.width - index_text.width - 40
+                    pos: index_label.width + index_text.width + 20, 0
+                    range: (0, 25)
+                    value: root.slider_values[2]
+                    step: 0.5
+                    on_value: root.slider_values[2] = self.value; root.updateIndex()
 
-    RelativeLayout:
-        id: row_4
-        orientation: "horizontal"
-        Label:
-            id: middle_label
-            size_hint_x: None
-            width: 200
-            pos: 0, 0
-            font_size: 20
-            text: "Middle position"
-        TextInput:
-            id: middle_text
-            size_hint: None, None
-            size: 100, 40
-            pos: middle_label.width, (row_4.height-self.height)/2
-            text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
-            text_height: self.line_height
-            padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
-            multiline: False
-            text: str(root.slider_values[3])
-            on_text_validate: root.slider_values[3] = float(self.text)
-        Slider:
-            id: middle_slider
-            size_hint_x: None
-            width: root.width - middle_label.width - middle_text.width - 40
-            pos: middle_label.width + middle_text.width + 20, 0
-            range: (0, 25)
-            value: root.slider_values[3]
-            step: 0.5
-            on_value: root.slider_values[3] = self.value; root.updateMiddle()
+            RelativeLayout:
+                id: row_4
+                orientation: "horizontal"
+                Label:
+                    id: middle_label
+                    size_hint_x: None
+                    width: 200
+                    pos: 0, 0
+                    font_size: 20
+                    text: "Middle position"
+                TextInput:
+                    id: middle_text
+                    size_hint: None, None
+                    size: 100, 40
+                    pos: middle_label.width, (row_4.height-self.height)/2
+                    text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+                    text_height: self.line_height
+                    padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+                    multiline: False
+                    text: str(root.slider_values[3])
+                    on_text_validate: root.slider_values[3] = float(self.text)
+                Slider:
+                    id: middle_slider
+                    size_hint_x: None
+                    width: root.width - middle_label.width - middle_text.width - 40
+                    pos: middle_label.width + middle_text.width + 20, 0
+                    range: (0, 25)
+                    value: root.slider_values[3]
+                    step: 0.5
+                    on_value: root.slider_values[3] = self.value; root.updateMiddle()
 
-    RelativeLayout:
-        id: row_5
-        Label:
-            id: ring_label
-            size_hint_x: None
-            width: 200
-            pos: 0, 0
-            font_size: 20
-            text: "Ring position"
-        TextInput:
-            id: ring_text
-            size_hint: None, None
-            size: 100, 40
-            pos: ring_label.width, (row_5.height-self.height)/2
-            text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
-            text_height: self.line_height
-            padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
-            multiline: False
-            text: str(root.slider_values[4])
-            on_text_validate: root.slider_values[4] = float(self.text)
-        Slider:
-            id: ring_slider
-            size_hint_x: None
-            width: root.width - ring_label.width - ring_text.width - 40
-            pos: ring_label.width + ring_text.width + 20, 0
-            range: (0, 25)
-            value: root.slider_values[4]
-            step: 0.5
-            on_value: root.slider_values[4] = self.value; root.updateRing()
+            RelativeLayout:
+                id: row_5
+                Label:
+                    id: ring_label
+                    size_hint_x: None
+                    width: 200
+                    pos: 0, 0
+                    font_size: 20
+                    text: "Ring position"
+                TextInput:
+                    id: ring_text
+                    size_hint: None, None
+                    size: 100, 40
+                    pos: ring_label.width, (row_5.height-self.height)/2
+                    text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+                    text_height: self.line_height
+                    padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+                    multiline: False
+                    text: str(root.slider_values[4])
+                    on_text_validate: root.slider_values[4] = float(self.text)
+                Slider:
+                    id: ring_slider
+                    size_hint_x: None
+                    width: root.width - ring_label.width - ring_text.width - 40
+                    pos: ring_label.width + ring_text.width + 20, 0
+                    range: (0, 25)
+                    value: root.slider_values[4]
+                    step: 0.5
+                    on_value: root.slider_values[4] = self.value; root.updateRing()
 
-    RelativeLayout:
-        id: row_6
-        Label:
-            id: pinky_label
-            size_hint_x: None
-            width: 200
-            pos: 0, 0
-            font_size: 20
-            text: "Pinky position"
-        TextInput:
-            id: pinky_text
-            size_hint: None, None
-            size: 100, 40
-            pos: pinky_label.width, (row_6.height-self.height)/2
-            text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
-            text_height: self.line_height
-            padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
-            multiline: False
-            text: str(root.slider_values[5])
-            on_text_validate: root.slider_values[5] = float(self.text)
-        Slider:
-            id: pinky_slider
-            size_hint_x: None
-            width: root.width - pinky_label.width - pinky_text.width - 40
-            pos: pinky_label.width + pinky_text.width + 20, 0
-            range: (0, 25)
-            value: root.slider_values[5]
-            step: 0.5
-            on_value: root.slider_values[5] = self.value; root.updatePinky()
+            RelativeLayout:
+                id: row_6
+                Label:
+                    id: pinky_label
+                    size_hint_x: None
+                    width: 200
+                    pos: 0, 0
+                    font_size: 20
+                    text: "Pinky position"
+                TextInput:
+                    id: pinky_text
+                    size_hint: None, None
+                    size: 100, 40
+                    pos: pinky_label.width, (row_6.height-self.height)/2
+                    text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
+                    text_height: self.line_height
+                    padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
+                    multiline: False
+                    text: str(root.slider_values[5])
+                    on_text_validate: root.slider_values[5] = float(self.text)
+                Slider:
+                    id: pinky_slider
+                    size_hint_x: None
+                    width: root.width - pinky_label.width - pinky_text.width - 40
+                    pos: pinky_label.width + pinky_text.width + 20, 0
+                    range: (0, 25)
+                    value: root.slider_values[5]
+                    step: 0.5
+                    on_value: root.slider_values[5] = self.value; root.updatePinky()
