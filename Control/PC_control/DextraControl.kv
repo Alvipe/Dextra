@@ -9,32 +9,55 @@
     TabbedPanelItem:
         id: tab1
         text: "Connection"
+        font_size: 20
         BoxLayout:
             orientation: "vertical"
             Label:
                 id: status_label
-                font_size: 50
                 text: "Not connected"
+                font_size: 50
                 color: 1,0,0,1
-            Spinner:
-                id: device_list
-                text_autoupdate: True
-                text: "Select device"
-                values: root.serial_port_list
-                on_press: root.scan_ports()
-            BoxLayout:
+            RelativeLayout:
+                id: dropdown_list
+                Label:
+                    size_hint: None, None
+                    size: 200, self.line_height
+                    pos: (dropdown_list.width - self.width)/2, (dropdown_list.height - self.height)/2 + self.height
+                    text: "Serial port"
+                    font_size: 30
+                Spinner:
+                    id: device_list
+                    size_hint: None, None
+                    size: 300, 50
+                    pos: (dropdown_list.width - self.width)/2, (dropdown_list.height - self.height)/2 - self.height
+                    text_autoupdate: True
+                    text: "Select device"
+                    font_size: 20
+                    values: root.serial_port_list
+                    on_press: root.scan_ports()
+            RelativeLayout:
+                id: buttons
                 orientation: "horizontal"
                 Button:
                     id: connect_button
+                    size_hint: None, None
+                    size: 200, 100
+                    pos: (buttons.width/2-self.width)/2, (buttons.height-self.height)/2
                     text: "Connect to serial"
-                    on_release: root.connect_press()
+                    font_size: 20
+                    on_release: root.connect()
                 Button:
                     id: disconnect_button
+                    size_hint: None, None
+                    size: 200, 100
+                    pos: (3*buttons.width/2-self.width)/2, (buttons.height-self.height)/2
                     text: "Disconnect"
-                    on_release: root.disconnect_press()
+                    font_size: 20
+                    on_release: root.disconnect()
     TabbedPanelItem:
         id: tab2
         text: "Control panel"
+        font_size: 20
         BoxLayout:
             orientation: "vertical"
             RelativeLayout:
@@ -44,8 +67,8 @@
                     size_hint_x: None
                     width: 200
                     pos: 0, 0
-                    font_size: 20
                     text: "Abductor angle"
+                    font_size: 20
                 TextInput:
                     id: abductor_text
                     write_tab: False
@@ -74,8 +97,8 @@
                     size_hint_x: None
                     width: 200
                     pos: 0, 0
-                    font_size: 20
                     text: "Thumb position"
+                    font_size: 20
                 TextInput:
                     id: thumb_text
                     write_tab: False
@@ -105,8 +128,8 @@
                     size_hint_x: None
                     width: 200
                     pos: 0, 0
-                    font_size: 20
                     text: "Index position"
+                    font_size: 20
                 TextInput:
                     id: index_text
                     write_tab: False
@@ -137,8 +160,8 @@
                     size_hint_x: None
                     width: 200
                     pos: 0, 0
-                    font_size: 20
                     text: "Middle position"
+                    font_size: 20
                 TextInput:
                     id: middle_text
                     write_tab: False
@@ -168,8 +191,8 @@
                     size_hint_x: None
                     width: 200
                     pos: 0, 0
-                    font_size: 20
                     text: "Ring position"
+                    font_size: 20
                 TextInput:
                     id: ring_text
                     write_tab: False
@@ -199,8 +222,8 @@
                     size_hint_x: None
                     width: 200
                     pos: 0, 0
-                    font_size: 20
                     text: "Pinky position"
+                    font_size: 20
                 TextInput:
                     id: pinky_text
                     write_tab: False

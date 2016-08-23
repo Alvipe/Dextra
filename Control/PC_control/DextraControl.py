@@ -8,9 +8,9 @@ import time
 import serial
 import struct
 
-header = chr(0x7E)
-footer = chr(0x7E)
-finger_address = [chr(0x01),chr(0x02),chr(0x03),chr(0x04),chr(0x05),chr(0x06)]
+HEADER = chr(0x7E)
+FOOTER = chr(0x7E)
+FINGER_ADDRESS = [chr(0x01),chr(0x02),chr(0x03),chr(0x04),chr(0x05),chr(0x06)]
 
 class RootWidget(TabbedPanel):
     ser = None
@@ -35,14 +35,15 @@ class RootWidget(TabbedPanel):
                 except:
                     self.ser = None
 
-    def connect_to_serial(self,serial_port):
+    def connect(self):
         try:
-            self.ser = serial.Serial(serial_port, 115200, timeout=1)
+            self.ser = serial.Serial(self.devices.text, 115200, timeout=1)
             self.ser.setDTR(False)
             time.sleep(1)
             self.ser.flushInput()
             self.ser.setDTR(True)
             time.sleep(2)
+            self.scheduled_event = Clock.schedule_interval(self.send_setpoint_list, 0.1)
             self.status.text = "Connected"
             self.status.color = [0,1,0,1]
         except:
@@ -51,27 +52,23 @@ class RootWidget(TabbedPanel):
             self.status.color = [1,0,0,1]
             print("No serial port found")
 
-    def connect_press(self):
-        self.connect_to_serial(self.devices.text)
-        if(self.ser):
-            self.scheduled_event = Clock.schedule_interval(self.send_setpoint_list, 0.1)
-    def disconnect_press(self):
-        if(self.ser):
+    def disconnect(self):
+        try:
             self.ser.close()
             Clock.unschedule(self.scheduled_event)
             # Clock.unschedule(self.send_setpoint_list) # METHOD NOT RECOMMENDED
             self.ser = None
             self.status.text = "Disconnected"
             self.status.color = [1,1,0,1]
-        else:
+        except:
             self.status.text = "Not connected"
             self.status.color = [1,0,0,1]
     def send_setpoint_list(self,dt):
-        message = header
+        message = HEADER
         for i in range(len(self.setpoint_list)):
             data = struct.pack('f',float(self.setpoint_list[i]))
-            message += finger_address[i] + data
-        message += footer
+            message += FINGER_ADDRESS[i] + data
+        message += FOOTER
         try:
             self.ser.write(message)
             print self.setpoint_list
