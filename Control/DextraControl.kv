@@ -3,6 +3,7 @@
 <RootWidget>:
     do_default_tab: False
     tab_width: root.width/len(self.tab_list)
+    tab_height: 0.08*root.height
     devices: device_list
     status: status_label
 
@@ -28,7 +29,7 @@
                 Spinner:
                     id: device_list
                     size_hint: None, None
-                    size: 300, 50
+                    size: 0.2*root.width, 0.08*root.height
                     pos: (dropdown_list.width - self.width)/2, (dropdown_list.height - self.height)/2 - self.height
                     text_autoupdate: True
                     text: "Select device"
@@ -37,19 +38,18 @@
                     on_press: root.scan_ports()
             RelativeLayout:
                 id: buttons
-                orientation: "horizontal"
                 Button:
                     id: connect_button
                     size_hint: None, None
-                    size: 200, 100
+                    size: 0.2*root.width, 0.15*root.height
                     pos: (buttons.width/2-self.width)/2, (buttons.height-self.height)/2
-                    text: "Connect to serial"
+                    text: "Connect"
                     font_size: 20
                     on_release: root.connect()
                 Button:
                     id: disconnect_button
                     size_hint: None, None
-                    size: 200, 100
+                    size: 0.2*root.width, 0.15*root.height
                     pos: (3*buttons.width/2-self.width)/2, (buttons.height-self.height)/2
                     text: "Disconnect"
                     font_size: 20
