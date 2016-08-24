@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include <Finger.h>
+#include <Synapse.h>
 #include <Servo.h>
 #include <MsTimer2.h>
-#include <SeCo.h>
 
 #define pidTime 10 //ms
 
@@ -12,11 +12,11 @@ Finger middle(7,6,19,18);
 Finger ring(5,4,21,20);
 Finger pinky(2,3,23,22);
 Servo abductor;
-SeCo dataLink;
+Synapse dataLink;
 
-int abAngle = map(10, 0, 90, 20, 110);
+float abductorAngle = map(10, 0, 90, 20, 110);
 
-void hand_control() {
+void handControl() {
     thumb.positionPID();
     indx.positionPID();
     middle.positionPID();
@@ -51,30 +51,28 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(ring._encoderPinA), ringReadEncoder, CHANGE);
     attachInterrupt(digitalPinToInterrupt(pinky._encoderPinA), pinkyReadEncoder, CHANGE);
     abductor.attach(12);
-    abductor.write(abAngle);
-    MsTimer2::set(pidTime, hand_control);
+    abductor.write(abductorAngle);
+    MsTimer2::set(pidTime, handControl);
     MsTimer2::start();
     Serial.begin(115200);
+    pinMode(13, OUTPUT);
+    digitalWrite(13, LOW);
 }
 
 void loop() {
-    while(!Serial.available());
-    char ctrl = Serial.read();
-    switch(ctrl) {
-        case 't':
-            thumb.move(dataLink.receive());
-            break;
-        case 'i':
-            indx.move(dataLink.receive());
-            break;
-        case 'm':
-            middle.move(dataLink.receive());
-            break;
-        case 'r':
-            ring.move(dataLink.receive());
-            break;
-        case 'p':
-            pinky.move(dataLink.receive());
-            break;
+    float* setPointArray = dataLink.getSetPoints();
+    if(setPointArray[2]==5.0) {
+        digitalWrite(13, HIGH);
     }
+    else {
+        digitalWrite(13, LOW);
+    }
+    // delay(100);
+    abductorAngle = map(setPointArray[0], 0, 90, 20, 110);
+    abductor.write(abductorAngle);
+    thumb.move(setPointArray[1]);
+    indx.move(setPointArray[2]);
+    middle.move(setPointArray[3]);
+    ring.move(setPointArray[4]);
+    pinky.move(setPointArray[5]);
 }

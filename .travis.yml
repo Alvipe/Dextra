@@ -43,8 +43,6 @@ install:
 script:
     - cd Firmware/Teensy31
     - platformio run
-    - cd ../STM32F411Nucleo
-    - platformio run
 
 
 #
