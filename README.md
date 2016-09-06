@@ -17,6 +17,9 @@ Dextra can be controlled either by sending commands from a computer with a GUI, 
 
 There is more information about Dextra on its [hackaday.io project page](https://hackaday.io/project/9890-dextra).
 
+# Assembly instructions
+The assembly instructions can be found [here](https://github.com/Alvipe/Dextra/tree/master/doc/dextra_assembly_instructions.pdf).
+
 # Project index
 * [Control](https://github.com/Alvipe/Dextra/tree/master/Control) - Code for different control methods (EMG, GUI)
 * [Firmware](https://github.com/Alvipe/Dextra/tree/master/Firmware) - Main program and libraries that make Dextra move
