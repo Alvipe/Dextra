@@ -69,12 +69,24 @@
                     pos: 0, 0
                     text: "Abductor angle"
                     font_size: 20
+                BoxLayout:
+                    id: abductor_incdec_buttons
+                    orientation: "vertical"
+                    size_hint: None, None
+                    size: 50, 40
+                    pos: abductor_label.width, (row_1.height-self.height)/2
+                    Button:
+                        text: "+"
+                        on_release: root.setpoint_list[0] += 1
+                    Button:
+                        text: "-"
+                        on_release: root.setpoint_list[0] -= 1
                 TextInput:
-                    id: abductor_text
+                    id: abductor_textbox
                     write_tab: False
                     size_hint: None, None
                     size: 100, 40
-                    pos: abductor_label.width, (row_1.height-self.height)/2
+                    pos: abductor_label.width + abductor_incdec_buttons.width, (row_1.height-self.height)/2
                     text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
                     text_height: self.line_height
                     padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
@@ -84,8 +96,8 @@
                 Slider:
                     id: abductor_slider
                     size_hint_x: None
-                    width: root.width - abductor_label.width - abductor_text.width - 40
-                    pos: abductor_label.width + abductor_text.width + 20, 0
+                    width: root.width - abductor_label.width - abductor_incdec_buttons.width - abductor_textbox.width - 40
+                    pos: abductor_label.width + abductor_incdec_buttons.width + abductor_textbox.width + 20, 0
                     range: (0, 90)
                     value: root.setpoint_list[0]
                     step: 1
@@ -99,12 +111,24 @@
                     pos: 0, 0
                     text: "Thumb position"
                     font_size: 20
+                BoxLayout:
+                    id: thumb_incdec_buttons
+                    orientation: "vertical"
+                    size_hint: None, None
+                    size: 50, 40
+                    pos: thumb_label.width, (row_2.height-self.height)/2
+                    Button:
+                        text: "+"
+                        on_release: root.setpoint_list[1] = round(root.setpoint_list[1]+0.1,1)
+                    Button:
+                        text: "-"
+                        on_release: root.setpoint_list[1] = round(root.setpoint_list[1]-0.1,1)
                 TextInput:
-                    id: thumb_text
+                    id: thumb_textbox
                     write_tab: False
                     size_hint: None, None
                     size: 100, 40
-                    pos: thumb_label.width, (row_2.height-self.height)/2
+                    pos: thumb_label.width + thumb_incdec_buttons.width, (row_2.height-self.height)/2
                     text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
                     text_height: self.line_height
                     padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
@@ -114,8 +138,8 @@
                 Slider:
                     id: thumb_slider
                     size_hint_x: None
-                    width: root.width - thumb_label.width - thumb_text.width - 40
-                    pos: thumb_label.width + thumb_text.width + 20, 0
+                    width: root.width - thumb_label.width - thumb_incdec_buttons.width - thumb_textbox.width - 40
+                    pos: thumb_label.width + thumb_incdec_buttons.width + thumb_textbox.width + 20, 0
                     range: (-12, 12)
                     value: root.setpoint_list[1]
                     step: 0.5
@@ -130,12 +154,24 @@
                     pos: 0, 0
                     text: "Index position"
                     font_size: 20
+                BoxLayout:
+                    id: index_incdec_buttons
+                    orientation: "vertical"
+                    size_hint: None, None
+                    size: 50, 40
+                    pos: index_label.width, (row_3.height-self.height)/2
+                    Button:
+                        text: "+"
+                        on_release: root.setpoint_list[2] = round(root.setpoint_list[2]+0.1,1)
+                    Button:
+                        text: "-"
+                        on_release: root.setpoint_list[2] = round(root.setpoint_list[2]-0.1,1)
                 TextInput:
-                    id: index_text
+                    id: index_textbox
                     write_tab: False
                     size_hint: None, None
                     size: 100, 40
-                    pos: index_label.width, (row_3.height-self.height)/2
+                    pos: index_label.width + index_incdec_buttons.width, (row_3.height-self.height)/2
                     text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
                     text_height: self.line_height
                     padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
@@ -145,8 +181,8 @@
                 Slider:
                     id: index_slider
                     size_hint_x: None
-                    width: root.width - index_label.width - index_text.width - 40
-                    pos: index_label.width + index_text.width + 20, 0
+                    width: root.width - index_label.width - index_incdec_buttons.width - index_textbox.width - 40
+                    pos: index_label.width + index_incdec_buttons.width + index_textbox.width + 20, 0
                     range: (0, 25)
                     value: root.setpoint_list[2]
                     step: 0.5
@@ -162,12 +198,24 @@
                     pos: 0, 0
                     text: "Middle position"
                     font_size: 20
+                BoxLayout:
+                    id: middle_incdec_buttons
+                    orientation: "vertical"
+                    size_hint: None, None
+                    size: 50, 40
+                    pos: middle_label.width, (row_4.height-self.height)/2
+                    Button:
+                        text: "+"
+                        on_release: root.setpoint_list[3] = round(root.setpoint_list[3]+0.1,1)
+                    Button:
+                        text: "-"
+                        on_release: root.setpoint_list[3] = round(root.setpoint_list[3]-0.1,1)
                 TextInput:
-                    id: middle_text
+                    id: middle_textbox
                     write_tab: False
                     size_hint: None, None
                     size: 100, 40
-                    pos: middle_label.width, (row_4.height-self.height)/2
+                    pos: middle_label.width + middle_incdec_buttons.width, (row_4.height-self.height)/2
                     text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
                     text_height: self.line_height
                     padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
@@ -177,8 +225,8 @@
                 Slider:
                     id: middle_slider
                     size_hint_x: None
-                    width: root.width - middle_label.width - middle_text.width - 40
-                    pos: middle_label.width + middle_text.width + 20, 0
+                    width: root.width - middle_label.width - middle_incdec_buttons.width - middle_textbox.width - 40
+                    pos: middle_label.width + middle_incdec_buttons.width + middle_textbox.width + 20, 0
                     range: (0, 25)
                     value: root.setpoint_list[3]
                     step: 0.5
@@ -193,12 +241,24 @@
                     pos: 0, 0
                     text: "Ring position"
                     font_size: 20
+                BoxLayout:
+                    id: ring_incdec_buttons
+                    orientation: "vertical"
+                    size_hint: None, None
+                    size: 50, 40
+                    pos: ring_label.width, (row_5.height-self.height)/2
+                    Button:
+                        text: "+"
+                        on_release: root.setpoint_list[4] = round(root.setpoint_list[4]+0.1,1)
+                    Button:
+                        text: "-"
+                        on_release: root.setpoint_list[4] = round(root.setpoint_list[4]-0.1,1)
                 TextInput:
-                    id: ring_text
+                    id: ring_textbox
                     write_tab: False
                     size_hint: None, None
                     size: 100, 40
-                    pos: ring_label.width, (row_5.height-self.height)/2
+                    pos: ring_label.width + ring_incdec_buttons.width, (row_5.height-self.height)/2
                     text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
                     text_height: self.line_height
                     padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
@@ -208,8 +268,8 @@
                 Slider:
                     id: ring_slider
                     size_hint_x: None
-                    width: root.width - ring_label.width - ring_text.width - 40
-                    pos: ring_label.width + ring_text.width + 20, 0
+                    width: root.width - ring_label.width - ring_incdec_buttons.width - ring_textbox.width - 40
+                    pos: ring_label.width + ring_incdec_buttons.width + ring_textbox.width + 20, 0
                     range: (0, 25)
                     value: root.setpoint_list[4]
                     step: 0.5
@@ -224,12 +284,24 @@
                     pos: 0, 0
                     text: "Pinky position"
                     font_size: 20
+                BoxLayout:
+                    id: pinky_incdec_buttons
+                    orientation: "vertical"
+                    size_hint: None, None
+                    size: 50, 40
+                    pos: pinky_label.width, (row_6.height-self.height)/2
+                    Button:
+                        text: "+"
+                        on_release: root.setpoint_list[5] = round(root.setpoint_list[5]+0.1,1)
+                    Button:
+                        text: "-"
+                        on_release: root.setpoint_list[5] = round(root.setpoint_list[5]-0.1,1)
                 TextInput:
-                    id: pinky_text
+                    id: pinky_textbox
                     write_tab: False
                     size_hint: None, None
                     size: 100, 40
-                    pos: pinky_label.width, (row_6.height-self.height)/2
+                    pos: pinky_label.width + pinky_incdec_buttons.width, (row_6.height-self.height)/2
                     text_width: self._get_text_width(self.text, self.tab_width, self._label_cached)
                     text_height: self.line_height
                     padding: [(self.width-self.text_width)/2,(self.height-self.text_height)/2]
@@ -239,8 +311,8 @@
                 Slider:
                     id: pinky_slider
                     size_hint_x: None
-                    width: root.width - pinky_label.width - pinky_text.width - 40
-                    pos: pinky_label.width + pinky_text.width + 20, 0
+                    width: root.width - pinky_label.width - pinky_incdec_buttons.width - pinky_textbox.width - 40
+                    pos: pinky_label.width + pinky_incdec_buttons.width + pinky_textbox.width + 20, 0
                     range: (0, 25)
                     value: root.setpoint_list[5]
                     step: 0.5
