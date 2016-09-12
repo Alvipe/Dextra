@@ -11,9 +11,16 @@ The key design points of Dextra are: adaptive grip, compact size, mechanical sim
 <img src="./doc/images/dextra/dextra3.jpg" width="600" align="center">
 </p>
 
+To reduce the size, as well as the mechanical complexity of Dextra, the fingers are underactuated, that is, they have more degrees of freedom (DOF) than actuators. Each finger module has three DOF and one motor, while the thumb has two DOF and one motor. Besides that, the abduction/adduction of the thumb is independently actuated by a RC servomotor.
+
 The motion of the fingers of Dextra is controlled by a position control loop. Since the finger is underactuated, the angular position of each phalanx cannot be controlled independently. Instead, the total angular position of the finger, that is, the sum of the three joint angles, is controlled. Each finger is controlled by a PID loop that takes a position setpoint as the input and uses the feedback position measured by a magnetic quadrature encoder to adjust the real position of the DC motor driving the finger.
 
 Dextra can be controlled either by sending commands from a computer with a GUI, or by using EMG signals, as would be done if the hand is used as a prosthesis. To implement the second type of control, an EMG interface called [Mumai](https://github.com/Alvipe/Mumai) is being used. Currently, a myoelectric threshold controller is implemented: the raw EMG signal provided by the EMG interface is rectified and smoothed by software and when this processed signal exceeds a certain value, the hand closes.
+
+Here are some videos showing how Dextra works:
+* [Open-loop finger control](https://www.youtube.com/watch?v=N3UU5vtAwHg)
+* [Closed-loop finger control](https://www.youtube.com/watch?v=Uz6x0zFXkCc)
+* [Myoelectric control](https://www.youtube.com/watch?v=L_VyQa0jCiI)
 
 There is more information about Dextra on its [hackaday.io project page](https://hackaday.io/project/9890-dextra).
 
