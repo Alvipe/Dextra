@@ -16,11 +16,11 @@ class RootWidget(TabbedPanel):
     def scan_ports(self):
         if not self.status.value:
             self.devices.text = "Select device"
-            self.serial_port_list = synapse.scan_ports()
+            self.serial_port_list = synapse.scan_serial_ports()
 
     def connect(self):
         if not self.status.value:
-            self.ser, self.status.value = synapse.connect(self.devices.text)
+            self.ser, self.status.value = synapse.connect_to_serial(self.devices.text)
             if self.status.value:
                 self.scheduled_event = Clock.schedule_interval(self.send_setpoint_list, 0.1)
                 self.status.text = "Connected"
@@ -42,7 +42,7 @@ class RootWidget(TabbedPanel):
 
     def send_setpoint_list(self,dt):
         try:
-            synapse.send_setpoint_list(self.ser,self.setpoint_list)
+            synapse.write_setpoint_list(self.ser,self.setpoint_list)
             # print self.setpoint_list
         except:
             Clock.unschedule(self.scheduled_event)
