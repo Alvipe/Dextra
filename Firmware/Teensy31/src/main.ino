@@ -12,7 +12,7 @@ Finger middle(7,6,19,18);
 Finger ring(5,4,21,20);
 Finger pinky(2,3,23,22);
 Servo abductor;
-Synapse dataLink;
+Synapse dataLink(Serial);
 
 float abductorAngle = map(10, 0, 90, 20, 110);
 
@@ -60,7 +60,8 @@ void setup() {
 }
 
 void loop() {
-    float* setPointArray = dataLink.getSetPoints();
+    float setPointArray[6];
+    dataLink.readSetPoints(&setPointArray[0]);
     if(setPointArray[2]==5.0) {
         digitalWrite(13, HIGH);
     }

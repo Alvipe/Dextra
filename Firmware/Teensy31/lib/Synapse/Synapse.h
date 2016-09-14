@@ -5,12 +5,15 @@
 
 class Synapse {
     public:
-        float *getSetPoints();
-        void write(float* messageToSend);
+        Synapse(Stream &serial);
+        void readSetPoints(float* setPointArray);
+        void writeDataArray(float* dataArrayOut);
     private:
         bool waitHeader();
-        bool checkMsg(uint8_t *buff);
-        uint8_t* getMessage();
+        bool checkMessage(uint8_t* message);
+        void getMessage(uint8_t* message);
+        Stream* _serial;
+        uint8_t check;
 };
 
 #endif
