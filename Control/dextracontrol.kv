@@ -141,7 +141,7 @@
                     size_hint_x: None
                     width: root.width - thumb_label.width - thumb_incdec_buttons.width - thumb_textbox.width - 40
                     pos: thumb_label.width + thumb_incdec_buttons.width + thumb_textbox.width + 20, 0
-                    range: (-12, 12)
+                    range: (-8, 12)
                     value: root.setpoint_list[1]
                     step: 0.5
                     on_value: root.setpoint_list[1] = float(self.value)
@@ -184,7 +184,7 @@
                     size_hint_x: None
                     width: root.width - index_label.width - index_incdec_buttons.width - index_textbox.width - 40
                     pos: index_label.width + index_incdec_buttons.width + index_textbox.width + 20, 0
-                    range: (0, 25)
+                    range: (0, 20)
                     value: root.setpoint_list[2]
                     step: 0.5
                     on_value: root.setpoint_list[2] = float(self.value)
@@ -228,7 +228,7 @@
                     size_hint_x: None
                     width: root.width - middle_label.width - middle_incdec_buttons.width - middle_textbox.width - 40
                     pos: middle_label.width + middle_incdec_buttons.width + middle_textbox.width + 20, 0
-                    range: (0, 25)
+                    range: (0, 20)
                     value: root.setpoint_list[3]
                     step: 0.5
                     on_value: root.setpoint_list[3] = float(self.value)
@@ -271,7 +271,7 @@
                     size_hint_x: None
                     width: root.width - ring_label.width - ring_incdec_buttons.width - ring_textbox.width - 40
                     pos: ring_label.width + ring_incdec_buttons.width + ring_textbox.width + 20, 0
-                    range: (0, 25)
+                    range: (0, 20)
                     value: root.setpoint_list[4]
                     step: 0.5
                     on_value: root.setpoint_list[4] = float(self.value)
@@ -314,7 +314,7 @@
                     size_hint_x: None
                     width: root.width - pinky_label.width - pinky_incdec_buttons.width - pinky_textbox.width - 40
                     pos: pinky_label.width + pinky_incdec_buttons.width + pinky_textbox.width + 20, 0
-                    range: (0, 25)
+                    range: (0, 20)
                     value: root.setpoint_list[5]
                     step: 0.5
                     on_value: root.setpoint_list[5] = float(self.value)
