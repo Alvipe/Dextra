@@ -6,11 +6,11 @@
 
 #define pidTime 10 //ms
 
-Finger thumb(11,10,15,14);
-Finger indx(8,9,17,16);
-Finger middle(7,6,19,18);
-Finger ring(5,4,21,20);
-Finger pinky(2,3,23,22);
+Finger thumb(2,4,23,22);
+Finger indx(7,5,21,20);
+Finger middle(8,6,19,18);
+Finger ring(11,9,17,16);
+Finger pinky(12,10,15,14);
 Servo abductor;
 Synapse dataLink(Serial);
 
@@ -50,7 +50,7 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(middle._encoderPinA), middleReadEncoder, CHANGE);
     attachInterrupt(digitalPinToInterrupt(ring._encoderPinA), ringReadEncoder, CHANGE);
     attachInterrupt(digitalPinToInterrupt(pinky._encoderPinA), pinkyReadEncoder, CHANGE);
-    abductor.attach(12);
+    abductor.attach(3);
     abductor.write(abductorAngle);
     MsTimer2::set(pidTime, handControl);
     MsTimer2::start();
@@ -62,18 +62,12 @@ void setup() {
 void loop() {
     float setPointArray[6];
     dataLink.readSetPoints(&setPointArray[0]);
-    if(setPointArray[2]==5.0) {
-        digitalWrite(13, HIGH);
-    }
-    else {
-        digitalWrite(13, LOW);
-    }
     // delay(100);
     abductorAngle = map(setPointArray[0], 0, 90, 20, 110);
     abductor.write(abductorAngle);
-    thumb.move(setPointArray[1]);
-    indx.move(setPointArray[2]);
-    middle.move(setPointArray[3]);
-    ring.move(setPointArray[4]);
-    pinky.move(setPointArray[5]);
+    thumb.writePosition(setPointArray[1]);
+    indx.writePosition(setPointArray[2]);
+    middle.writePosition(setPointArray[3]);
+    ring.writePosition(setPointArray[4]);
+    pinky.writePosition(setPointArray[5]);
 }
