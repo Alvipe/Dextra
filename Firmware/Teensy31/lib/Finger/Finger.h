@@ -8,8 +8,8 @@ class Finger {
         Finger(int phase, int enable, int encoderPinA, int encoderPinB);
         void readEncoder();
         void positionPID();
-        void move(float desiredPosition);
-        float getPos(char mode);
+        void writePosition(float desiredPosition);
+        float readPosition(char mode);
         int _encoderPinA, _encoderPinB, _phase, _enable;
     private:
         volatile int encoderCount = 0;

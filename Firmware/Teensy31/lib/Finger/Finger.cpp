@@ -51,7 +51,7 @@ void Finger::positionPID() {
     else {
         if (control >= 0) {
             pwmControl = constrain(control,0,255);
-            digitalWrite(_phase, HIGH);
+            digitalWrite(_phase, LOW);
             if (pwmControl > 25) {
                 analogWrite(_enable, pwmControl);
             }
@@ -61,7 +61,7 @@ void Finger::positionPID() {
         }
         else {
             pwmControl = constrain(abs(control),0,255);
-            digitalWrite(_phase, LOW);
+            digitalWrite(_phase, HIGH);
             if (pwmControl > 25) {
                 analogWrite(_enable, pwmControl);
             }
@@ -72,7 +72,7 @@ void Finger::positionPID() {
     }
 }
 
-void Finger::move(float desiredPosition) {
+void Finger::writePosition(float desiredPosition) {
     cli();
     if (desiredPosition > 22) {
         desiredPosition = 22;
@@ -84,7 +84,7 @@ void Finger::move(float desiredPosition) {
     sei();
 }
 
-float Finger::getPos(char mode) {
+float Finger::readPosition(char mode) {
     cli();
     if (mode == 'e') return encoderCount;
     else if (mode == 'a') return angularPos;
