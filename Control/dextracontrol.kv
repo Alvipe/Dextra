@@ -102,7 +102,7 @@
                     range: (0, 90)
                     value: root.setpoint_list[0]
                     step: 1
-                    on_value: root.setpoint_list[0] = float(self.value)
+                    on_value: root.setpoint_list[0] = float(self.value); root.send_setpoint_list(root.setpoint_list)
             RelativeLayout:
                 id: row_2
                 Label:
@@ -144,7 +144,7 @@
                     range: (-8, 12)
                     value: root.setpoint_list[1]
                     step: 0.5
-                    on_value: root.setpoint_list[1] = float(self.value)
+                    on_value: root.setpoint_list[1] = float(self.value); root.send_setpoint_list(root.setpoint_list)
 
             RelativeLayout:
                 id: row_3
@@ -187,7 +187,7 @@
                     range: (0, 20)
                     value: root.setpoint_list[2]
                     step: 0.5
-                    on_value: root.setpoint_list[2] = float(self.value)
+                    on_value: root.setpoint_list[2] = float(self.value); root.send_setpoint_list(root.setpoint_list)
 
             RelativeLayout:
                 id: row_4
@@ -231,7 +231,7 @@
                     range: (0, 20)
                     value: root.setpoint_list[3]
                     step: 0.5
-                    on_value: root.setpoint_list[3] = float(self.value)
+                    on_value: root.setpoint_list[3] = float(self.value); root.send_setpoint_list(root.setpoint_list)
 
             RelativeLayout:
                 id: row_5
@@ -274,7 +274,7 @@
                     range: (0, 20)
                     value: root.setpoint_list[4]
                     step: 0.5
-                    on_value: root.setpoint_list[4] = float(self.value)
+                    on_value: root.setpoint_list[4] = float(self.value); root.send_setpoint_list(root.setpoint_list)
 
             RelativeLayout:
                 id: row_6
@@ -317,4 +317,4 @@
                     range: (0, 20)
                     value: root.setpoint_list[5]
                     step: 0.5
-                    on_value: root.setpoint_list[5] = float(self.value)
+                    on_value: root.setpoint_list[5] = float(self.value); root.send_setpoint_list(root.setpoint_list)

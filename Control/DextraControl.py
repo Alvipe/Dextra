@@ -3,6 +3,7 @@ from kivy.uix.tabbedpanel import TabbedPanel
 from kivy.properties import ObjectProperty, ListProperty
 from kivy.clock import Clock
 
+import time
 import synapse
 
 class RootWidget(TabbedPanel):
@@ -22,7 +23,7 @@ class RootWidget(TabbedPanel):
         if not self.status.value:
             self.ser, self.status.value = synapse.connect_to_serial(self.devices.text)
             if self.status.value:
-                self.scheduled_event = Clock.schedule_interval(self.send_setpoint_list, 0.1)
+                # self.scheduled_event = Clock.schedule_interval(self.send_setpoint_list, 0.1)
                 self.status.text = "Connected"
                 self.status.color = [0,1,0,1]
             else:
@@ -32,7 +33,7 @@ class RootWidget(TabbedPanel):
     def disconnect(self):
         if self.status.value:
             self.ser.close()
-            Clock.unschedule(self.scheduled_event)
+            # Clock.unschedule(self.scheduled_event)
             self.status.value = False
             self.status.text = "Disconnected"
             self.status.color = [1,1,0,1]
@@ -45,7 +46,7 @@ class RootWidget(TabbedPanel):
             synapse.write_setpoint_list(self.ser,self.setpoint_list)
             # print self.setpoint_list
         except:
-            Clock.unschedule(self.scheduled_event)
+            # Clock.unschedule(self.scheduled_event)
             self.status.value = False
             self.status.text = "Transmission error"
             self.status.color = [1,0,0,1]
