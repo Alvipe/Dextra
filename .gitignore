@@ -3,3 +3,4 @@
 .gcc-flags.json
 .piolibdeps
 *.pyc
+*.fcstd1
